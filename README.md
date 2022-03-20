@@ -20,7 +20,7 @@ page they will fill out the basic information about themselves.
 
 
 ### Every user of the application have their own dashboards.
-> 1. The employee dashboard consists of an attendance, a suggestion/request page, and a notification from the organisation, They can also delete and update their account from the system.
+> 1. The employee dashboard consists of an attendance, a suggestion/request page, and a notification from the organisation. They can also delete and update their account from the system.
 > 2. The manager's dashboard consists of a list of employees, an attendance checker, get a notification from the organisation, a request page, a page to view if he gets a request from an employee, he can promote an employee to another department.
 > 3. The Admin dashboard consists of a list of all employees including the managers, a page to create and remove any kind of employee, he can change and also promote an employee, he will receive any request and also give a response to them, he can also add another admin to the system.
  
@@ -28,15 +28,10 @@ page they will fill out the basic information about themselves.
 **Group Members**
 
 |      **Name**      |   **ID**   |**Section**|
-|  :-------------:   | :-------:  | :--------:|
 |1. Bahailu Abera    |UGR/3464/12 |    3      |
-|  :-------------:   | :-------:  | :--------:|
 |2. Eyob Zebene      |UGR/5067/12 |    2      |
-|  :-------------:   | :-------:  | :--------:|
 |3. Gifti Mulugeta   |UGR/3377/12 |    1      |
-|  :-------------:   | :-------:  | :--------:|
 |4. Roza Kassaa      |UGR/2571/12 |    1      |
-|  :-------------:   | :-------:  | :--------:|
 |5. Selamawit Siferh |UGR/1822/12 |    1      |
 
 
