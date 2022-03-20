@@ -40,7 +40,6 @@ page they will fill out the basic information about themselves.
 |  :--------------:  | :--------: | :------:  |
 |1. Bahailu Abera    |UGR/3464/12 |    3      |
 |  :--------------:  | :--------: | :------:  |
-|  :--------------:  | :--------: | :------:  |
 |2. Eyob Zebene      |UGR/5067/12 |    2      |
 |  :--------------:  | :--------: | :------:  |
 |3. Gifti Mulugeta   |UGR/3377/12 |    1      |
