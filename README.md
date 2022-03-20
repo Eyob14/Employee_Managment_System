@@ -1,7 +1,7 @@
-# Employee management system 
-
+# Employee management system
+ 
 ## Project Description
-
+ 
 This project repository consists of a Flutter application made to manage an Employee system for any type of organisation. The idea of the project is that by
 giving employees an identification to join the system so that it makes it easy for both the employee and the employer to manage their work for the organisation.
 We tried to include the common application of any manual employment system provided by any organisation. So, the idea is simply digitalizing the backward employee
@@ -17,24 +17,41 @@ authenticated using their email and the password from their email invitations.
 of the application which will provide them the sign up and sign in page. So, since they are new users they sign up to the application. In the sign up
 page they will fill out the basic information about themselves.
 - After signing up to the app they can use the organisation's employee management system.
-
-
+ 
+ 
 ### Every user of the application have their own dashboards.
 > 1. The employee dashboard consists of an attendance, a suggestion/request page, and a notification from the organisation. They can also delete and update their account from the system.
 > 2. The manager's dashboard consists of a list of employees, an attendance checker, get a notification from the organisation, a request page, a page to view if he gets a request from an employee, he can promote an employee to another department.
 > 3. The Admin dashboard consists of a list of all employees including the managers, a page to create and remove any kind of employee, he can change and also promote an employee, he will receive any request and also give a response to them, he can also add another admin to the system.
  
-              
+ 
+### Authentication and Authorization
+ 
+**Authorization**:
+> users will fill FullName, Email, Password, profile picture, username, Department, ID number, other information that may required by the specific organisation
+ 
+**Authentication**:
+> At first Email and password through invitation link, next sign in using username and password.
+ 
+             
 **Group Members**
-
+ 
 |      **Name**      |   **ID**   |**Section**|
+|                    |            |           |
 |1. Bahailu Abera    |UGR/3464/12 |    3      |
+|                    |            |           |
 |2. Eyob Zebene      |UGR/5067/12 |    2      |
+|                    |            |           |
 |3. Gifti Mulugeta   |UGR/3377/12 |    1      |
+|                    |            |           |
 |4. Roza Kassaa      |UGR/2571/12 |    1      |
+|                    |            |           |
 |5. Selamawit Siferh |UGR/1822/12 |    1      |
-
-
-
-
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 
