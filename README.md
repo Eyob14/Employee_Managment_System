@@ -42,7 +42,7 @@ page they will fill out the basic information about themselves.
 |  :--------------:  | :--------: | :------:  |
 |2. Eyob Zebene      |UGR/5067/12 |    2      |
 |  :--------------:  | :--------: | :------:  |
-|3. Gifti Mulugeta   |UGR/3377/12 |    1      |
+|3. Gifti Mulugeta   |UGR/6377/12 |    1      |
 |  :--------------:  | :--------: | :------:  |
 |4. Roza Kassaa      |UGR/2571/12 |    1      |
 |  :--------------:  | :--------: | :------:  |
