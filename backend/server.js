@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require('dotenv').config();
-
+var bcrypt = require("bcryptjs");
 
 const app = express();
 var corsOptions = {
@@ -16,7 +16,8 @@ app.use(express.urlencoded({ extended: true }));
 
 const db = require("./models");
 const Role = db.role;
-db.sequelize.sync({ force: true }).then(() => {
+const User = db.user;
+db.sequelize.sync({force: true}).then(() => {
     console.log("database is connected successfully");
     initial();
 });
@@ -34,10 +35,18 @@ function initial() {
         id: 3,
         name: "owner"
     });
+    User.create({
+        email: "admin@example.com",
+        password: bcrypt.hashSync('123456', 6)
+    }).then(user => {
+        user.setRoles([3]).then(() => {console.log("owner was succesfully registered.")})
+    })
 }
 
 require('./routes/auth.routes')(app);
-require('./routes/user.routes')(app);
+require('./routes/employee.routes')(app);
+require('./routes/manager.routes')(app);
+require('./routes/owner.routes')(app);
 
 // Simple test route
 app.get("/", (req, res) => {
@@ -51,4 +60,4 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`server is runnning on port ${PORT}`)
-})
+});

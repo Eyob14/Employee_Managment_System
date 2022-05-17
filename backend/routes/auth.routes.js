@@ -1,5 +1,5 @@
 const controller = require('../controllers/auth.controller');
-
+const auth = require('../middleware/authJwt')
 module.exports = function (app) {
     app.use(function (req, res, next) {
         res.header(
@@ -9,7 +9,7 @@ module.exports = function (app) {
         next();
     });
     app.post(
-        "/api/auth/signup", controller.signup
+        "/api/signup",auth.checkDuplicateEmail, controller.signup
     );
-    app.post("/api/auth/signin", controller.signin);
+    app.post("/api/signin", controller.signin);
 };

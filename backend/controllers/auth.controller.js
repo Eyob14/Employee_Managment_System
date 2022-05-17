@@ -10,14 +10,26 @@ var bcrypt = require("bcryptjs");
 exports.signup = (req, res) => {
     User.create({
         email: req.body.email,
-        password: bcrypt.hashSync(req.body.password, 6)
+        password: bcrypt.hashSync(req.body.password, 6),
+        appoved: false
     })
         .then(user => {
-            user.setRoles([3]).then(() => {
-                res.send({
-                    message: "Owner registered Successfully!"
-                });
-            })
+            const role = req.body.role;
+            if (role === 'employee') {
+                user.setRoles([1]).then(() => {
+                    res.send({
+                        message: "Employee was registered successfully."
+                    })
+                })
+            }
+            else if (role === 'manager') {
+                user.setRoles([2]).then(() => {
+                    res.send({
+                        message: "Manager was registered successfully."
+                    })
+                })
+            }
+
         })
         .catch(err => {
             res.status(500).send({
@@ -46,6 +58,14 @@ exports.signin = (req, res) => {
                 return res.status(401).send({
                     message: "Invalid password!"
                 });
+            }
+            // To be handled by the owner 
+            user.update({appoved: true});
+            const validity = user.appoved;
+            if (!validity){
+                res.status(401).send({
+                    message: "You are not approved yet!"
+                })
             }
             var token = jwt.sign({ id: user.id }, config.secret, {
                 expiresIn: 86400 // expire after 24 hours
