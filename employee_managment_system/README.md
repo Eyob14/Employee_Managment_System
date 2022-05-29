@@ -1,4 +1,4 @@
-# employee_managment_system
+# employee_management_system
 
 A new Flutter project.
 
