@@ -1,7 +1,7 @@
 module.exports = {
     HOST: 'localhost',
     USER: 'root',
-    PASSWORD: 'bahailu12',
+    PASSWORD: 'password',
     DB: 'flutter',
     dialect: "mysql",
     pool: {
