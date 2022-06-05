@@ -68,15 +68,19 @@ exports.getMessages = (req, res) => {
         }
 
         const getSenderMessage = async (id_list) => {
-            const sender_message = {}
+            const sender_message = []
           
             for (const id of id_list) {
               const msg =  await SentMessage.findByPk(id)
               const sender = await User.findByPk(id)
-              sender_message[sender.email] = msg.message
-
+              sender_message.push( {
+                id: id,
+                message: msg.message,
+                message_sender : sender.email
+            })
             }
-          
+          console.log(sender_message)
+          console.log(sender_message[0])
             return sender_message
           }
         
