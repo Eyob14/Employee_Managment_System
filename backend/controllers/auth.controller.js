@@ -1,7 +1,6 @@
 const db = require('../models');
 const config = require('../config/auth.config');
 const User = db.user;
-const Role = db.role;
 const Op = db.Sequelize.Op;
 
 var jwt = require("jsonwebtoken");
@@ -11,29 +10,15 @@ exports.signup = (req, res) => {
     User.create({
         email: req.body.email,
         password: bcrypt.hashSync(req.body.password, 6),
-        appoved: false
+        role: req.body.role,
+        approved: req.body.approved
     })
         .then(user => {
-            const role = req.body.role;
-            if (role === 'employee') {
-                user.setRoles([1]).then(() => {
-                    res.send({
-                        message: "Employee was registered successfully."
-                    })
-                })
-            }
-            else if (role === 'manager') {
-                user.setRoles([2]).then(() => {
-                    res.send({
-                        message: "Manager was registered successfully."
-                    })
-                })
-            }
-
+            res.status(201).send(user);
         })
         .catch(err => {
             res.status(500).send({
-                message: err.message
+                message: err.message || "Couldn't store a user to the database"
             });
         });
 };
@@ -59,30 +44,26 @@ exports.signin = (req, res) => {
                     message: "Invalid password!"
                 });
             }
-            // To be handled by the owner 
-            user.update({appoved: true});
-            const validity = user.appoved;
-            if (!validity){
-                res.status(401).send({
+            const validity = user.approved;
+            if (!validity) {
+                res.status(402).send({
                     message: "You are not approved yet!"
                 })
             }
-            var token = jwt.sign({ id: user.id }, config.secret, {
-                expiresIn: 86400 // expire after 24 hours
-            });
-            var authorities = [];
-            user.getRoles()
-                .then(roles => {
-                    for (let i = 0; i < roles.length; i++) {
-                        authorities.push("ROLE_" + roles[i].name.toUpperCase());
-                    }
-                    res.status(200).send({
-                        id: user.id,
-                        email: user.email,
-                        roles: authorities,
-                        accessToken: token
-                    });
+            else {
+                console.log(validity);
+                var token = jwt.sign({ id: user.id }, config.secret, {
+                    expiresIn: 86400 // expire after 24 hours
                 });
+                console.log(token.toString());
+                
+                res.status(200).send({
+                    id: user.id,
+                    email: user.email,
+                    role: user.role,
+                    token: token.toString(),
+                });
+            }
         })
         .catch(err => {
             res.status(500).send({

@@ -1,52 +1,56 @@
 const express = require("express");
 const cors = require("cors");
-const dotenv = require('dotenv').config();
 var bcrypt = require("bcryptjs");
+const bodyParser = require("body-parser");
 
 const app = express();
-var corsOptions = {
-    origin: "http://localhost:8081"
-};
+// var corsOptions = {
+//     origin: "http://localhost:8081"
+// };
 
-app.use(cors(corsOptions));
+app.use(cors());
 // parse requests of content-type - application/json
-app.use(express.json());
+app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 const db = require("./models");
-const Role = db.role;
 const User = db.user;
-db.sequelize.sync({force: true}).then(() => {
+db.sequelize.sync({ force: false }).then(() => {
     console.log("database is connected successfully");
     initial();
 });
 
 function initial() {
-    Role.create({
-        id: 1,
-        name: "employee"
+
+    User.findOrCreate({
+        where: { role: "owner" },
+        defaults: {
+            email: "admin@example.com",
+            password: bcrypt.hashSync('123456', 6),
+            role: "owner",
+            approved: 1
+        }
+    }).then(([user, created]) => {
+        console.log("name = " + user.email, "password = " + user.password, "role = " + user.role)
+        if (created) {
+            console.log("owner was succesfully registered.");
+        }
+
+        else {
+            console.log("Owner already exists")
+        }
     });
-    Role.create({
-        id: 2,
-        name: "manager"
-    });
-    Role.create({
-        id: 3,
-        name: "owner"
-    });
-    User.create({
-        email: "admin@example.com",
-        password: bcrypt.hashSync('123456', 6)
-    }).then(user => {
-        user.setRoles([3]).then(() => {console.log("owner was succesfully registered.")})
-    })
 }
 
 require('./routes/auth.routes')(app);
-require('./routes/employee.routes')(app);
-require('./routes/manager.routes')(app);
 require('./routes/owner.routes')(app);
+require('./routes/profile.routes')(app);
+require('./routes/attendance.routes')(app);
+require('./routes/message.routes')(app);
+
+
+
 
 // Simple test route
 app.get("/", (req, res) => {
@@ -54,7 +58,6 @@ app.get("/", (req, res) => {
         message: "Welcome to the app"
     })
 })
-
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

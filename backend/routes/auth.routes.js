@@ -9,7 +9,7 @@ module.exports = function (app) {
         next();
     });
     app.post(
-        "/api/signup",auth.checkDuplicateEmail, controller.signup
+        "/api/create-account",auth.checkDuplicateEmail, controller.signup
     );
-    app.post("/api/signin", controller.signin);
+    app.post("/api/login", controller.signin);
 };

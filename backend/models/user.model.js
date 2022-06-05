@@ -6,11 +6,11 @@ module.exports = (sequelize, Sequelize) => {
         password: {
             type: Sequelize.STRING
         },
-        appoved: {
+        approved: {
             type: Sequelize.BOOLEAN
         },
-        attendance: {
-            type: Sequelize.INTEGER
+        role: {
+            type: Sequelize.STRING
         }
     });
     return User;
