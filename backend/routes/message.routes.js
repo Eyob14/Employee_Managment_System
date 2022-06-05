@@ -12,7 +12,10 @@ module.exports = function (app) {
     });
 
     //this uses the id of the user
-    app.get("/api/:id/messages", messageController.getMessages);
+    app.get("/api/:id/received-messages", messageController.getReceivedMessages);
+
+    //get all user sent message
+    app.get("/api/:id/sent-messages", messageController.getSentMessages)
 
     //deletes a specific user's messages from the database
     app.delete("/api/:userid/messages/:msgid", messageController.deleteMessage);

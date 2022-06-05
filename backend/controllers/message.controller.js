@@ -48,8 +48,9 @@ exports.createMessage = async(req, res) => {
 }
 
 
-exports.getMessages = (req, res) => {
+exports.getReceivedMessages = (req, res) => {
     const id = req.params.id;
+
      User.findByPk(id,  {
         include: [{
           model: ReceivedMessage ,
@@ -61,10 +62,10 @@ exports.getMessages = (req, res) => {
            
         let user_msgid = []
         var sender_message_pair;
-        let received_msg = messages.received_messages;
-        for (index = 0; index < (received_msg).length; ++index)
+        let sent_msg = messages.received_messages;
+        for (index = 0; index < (sent_msg).length; ++index)
         {
-            user_msgid.push(received_msg[index].message_id)
+            user_msgid.push(sent_msg[index].message_id)
         }
 
         const getSenderMessage = async (id_list) => {
@@ -72,15 +73,14 @@ exports.getMessages = (req, res) => {
           
             for (const id of id_list) {
               const msg =  await SentMessage.findByPk(id)
-              const sender = await User.findByPk(id)
+              const sender = await User.findByPk(msg.senderId)
               sender_message.push( {
                 id: id,
                 message: msg.message,
                 message_sender : sender.email
             })
             }
-          console.log(sender_message)
-          console.log(sender_message[0])
+          
             return sender_message
           }
         
@@ -99,6 +99,33 @@ exports.getMessages = (req, res) => {
     });
     
 }
+
+exports.getSentMessages = (req, res) => {
+     const id = req.params.id;
+     SentMessage.findAll({where : {senderId : id}})
+       .then(messages => {
+           
+        let sent_msg = []
+        for (const msg of messages)
+        {
+            sent_msg.push({id : msg.id, message : msg.message})
+        }
+
+        res.status(200).send({
+            sent_msg
+        })
+    }).catch(err => {
+        res.status(400).send({
+            message: "cannot get message"
+        });
+    }).catch(err => {
+        res.status(501).send({
+            message:  "internal server error"
+        });
+    })
+    
+}
+
 
 exports.updateMessage = async(req, res) => {
     const userid = req.params.userid;
