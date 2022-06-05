@@ -14,6 +14,8 @@ module.exports = function (app) {
     //this uses the id of the user
     app.get("/api/:id/received-messages", messageController.getReceivedMessages);
 
+    app.get("/api/message/:id", messageController.getMessagesById)
+
     //get all user sent message
     app.get("/api/:id/sent-messages", messageController.getSentMessages)
 
