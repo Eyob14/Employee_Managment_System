@@ -1,3 +1,4 @@
+const { Sequelize } = require('../models');
 const db = require('../models');
 const User = db.user;
 const Attendance = db.attendance;
@@ -5,9 +6,7 @@ const Attendance = db.attendance;
 
 exports.createAttendance = (req, res) => {
     const id = req.params.id;
-    console.log(id);
     Attendance.create({
-        date: req.body.date,
         present: req.body.present
     })
         .then(attendance => {
@@ -38,6 +37,8 @@ exports.createAttendance = (req, res) => {
 //attendance history of the user
 exports.getAttendanceHistoryOfUser = (req, res) => {
     const id = req.params.id;
+    // var today = new Date ()
+    // today = today.toISOString().slice(0,10)
     User.findOne({
         where: { id: id },
         include: [{
@@ -60,10 +61,13 @@ exports.getAttendanceHistoryOfUser = (req, res) => {
             result.push(attendance);
         }
         console.log("*************************************************");
+        console.log(result)
+        console.log(today)
         let answer = []
-        console.log(today);
         for (let i = 0; i < result.length; i++) {
-            if (result[i].date === today && result[i].present === false) {
+
+            if (result[i].present === false) // why I use day here bro!
+            {
                 continue;
             }
             else {
@@ -80,11 +84,12 @@ exports.getAttendanceHistoryOfUser = (req, res) => {
 
 //get list todays attendance 
 exports.getTodayAttendanceOfAllUsers = (req, res) => {
+    var today = new Date();
     User.findAll({
         include: [{
             model: Attendance,
             required: true,
-            where: { date: req.body.date }
+            where: { date: Sequelize.DATEONLY(today)}
         }]
     }).then(data => {
         let result = [];
@@ -104,20 +109,16 @@ exports.getTodayAttendanceOfAllUsers = (req, res) => {
     })
 }
 
-//creates an attendance for a single user
+//get an attendance for a single user
 exports.getTodayAttendanceOfUser = (req, res) => {
     const id = req.params.id;
-    // const date = new Date();
-    // const day = date.getDate();
-    // const month = date.getMonth() + 1;
-    // const year = date.getFullYear();
-    // const today = year + '-' + month + '-' + day;
+    var today = new Date ()
     User.findOne({
         where: { id: id },
         include: [{
             model: Attendance,
             required: true,
-            where: { date: req.body.date }
+            where: { date: Sequelize.DATEONLY(today) }
         }]
     }).then(data => {
         console.log(data.attendances[0].dataValues);
