@@ -1,6 +1,5 @@
 const authJwt = require("../middleware/authJwt");
-const controller = require("../controllers/owner.controller");
-const UserController = require("../controllers/employee.controller")
+const ownerController = require("../controllers/owner.controller");
 
 module.exports = function (app) {
     app.use(function (req, res, next) {
@@ -10,24 +9,19 @@ module.exports = function (app) {
         );
         next();
     });
-    app.get(
-        "/api/owner",
-        [authJwt.verifyToken, authJwt.isOwner],
-        controller.ownerBoard
-    );
-    app.get(
-        "/api/owner/updateProfile",
-        [authJwt.verifyToken, authJwt.isOwner],
-        UserController.get_updateProfile
-    );
-    app.put(
-        "/api/owner/approve",
-        [authJwt.verifyToken, authJwt.isOwner],
-        UserController.post_updateProfile
-    );
-    app.get(
-        "/api/owner/approve",
-        [authJwt.verifyToken, authJwt.isOwner],
-        controller.approveEmployee
-    );
+    // app.get(
+    //     "/api/owner",
+    //     [authJwt.verifyToken, authJwt.isOwner],
+    //     controller.ownerBoard
+    // );
+
+    //all routes related to authontication involving the owner of the app
+    // returns all users applicants from the database
+    app.get("/api/applicants", ownerController.findAllApplicants);
+    app.put("/api/applicants/:id", ownerController.approveUser);
+    app.delete("/api/applicants/:id", ownerController.rejectUser);
+    //update the role of an individual user
+    app.put("/api/users/:id", ownerController.updateRole);
+    
+    
 };
