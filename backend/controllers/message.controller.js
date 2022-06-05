@@ -86,7 +86,7 @@ exports.getReceivedMessages = (req, res) => {
         
         (async () => {
            sender_message_pair = await getSenderMessage(user_msgid);
-            res.status(201).send({
+            res.status(200).send({
                 message: sender_message_pair
             });    
          })()
@@ -104,16 +104,47 @@ exports.getSentMessages = (req, res) => {
      const id = req.params.id;
      SentMessage.findAll({where : {senderId : id}})
        .then(messages => {
-           
-        let sent_msg = []
-        for (const msg of messages)
-        {
-            sent_msg.push({id : msg.id, message : msg.message})
-        }
 
-        res.status(200).send({
-            sent_msg
-        })
+        const getSenderMessage = async (message) => {
+ 
+            let sent_msg = []
+            let receiver = []
+
+        for (const msg of message)
+        {
+           await ReceivedMessage.findByPk(msg.id, {
+                include: [{
+                  model: User ,
+                  attributes: ["email", "id"]
+                }
+                ]
+              }).then (result => {
+
+                for (const user of result.users)
+                {
+                    receiver.push({email : user.email, id : user.id})
+                }
+
+                 
+              }).catch(err => {
+                  res.status(400).send({
+                      message : "not Found"
+                  })
+              })
+            sent_msg.push({id : msg.id, message : msg.message, receiver: receiver})
+        }
+            return sent_msg
+          }
+
+        
+
+        (async () => {
+            sent_msg = await getSenderMessage(messages);
+             res.status(200).send({
+                 sent_msg
+             });    
+          })()
+
     }).catch(err => {
         res.status(400).send({
             message: "cannot get message"
@@ -172,4 +203,23 @@ exports.deleteMessage = async(req, res) => {
             message : "failed  to delete"
         })
     })
+}
+
+
+exports.getMessagesById = (req, res) => {
+    const msgId = req.params.id;
+
+    SentMessage.findByPk(msgId).then(
+        result => {
+            message = result.message
+            res.status(200).send({
+                message
+            })
+        }
+    ).catch(err => {
+        res.status(400).send({
+            message: err.message || "cannot get message"
+        });
+    });
+    
 }
