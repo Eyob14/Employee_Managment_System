@@ -1,5 +1,7 @@
 // import 'package:go_router/go_router.dart';
 
+import 'package:employee_management_system/presentation/routes/constants.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../presentation_index.dart';
 
@@ -11,7 +13,7 @@ class WelcomeScreen extends StatelessWidget {
       child: Scaffold(
         body: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.only(top: 13),
+            padding: const EdgeInsets.only(top: 60),
             child: Center(
               child: Padding(
                 padding:
@@ -49,10 +51,30 @@ class WelcomeScreen extends StatelessWidget {
                     const SizedBox(
                       height: 50,
                     ),
-                    InkWell(
-                      child: SignUpContainer(st: "Login"),
-                      onTap: () => GoRouter.of(context).go('/login'),
+                    BlocListener<AuthenticationBloc, AuthenticationState>(
+                      listener: ((context, state) {
+                        if (state is AuthenticationAuthenticated) {
+                          if (state.user.role.toString() == "owner") {
+                            GoRouter.of(context).go('/owner-dashboard');
+                          } else if (state.user.role.toString() == "employee") {
+                            GoRouter.of(context).go('/employee-dashboard');
+                          } else {
+                            GoRouter.of(context).go('/manager-dashboard');
+                          }
+                        }
+                        else {
+                        GoRouter.of(context).go('/login');
+                        }
+                      }),
+                      child: InkWell(
+                        child: SignUpContainer(st: "Login"),
+                        onTap: () {
+                          BlocProvider.of<AuthenticationBloc>(context)
+                              .add(AppLoaded());
+                        },
+                      ),
                     ),
+
                     const SizedBox(
                       height: 50,
                     ),
@@ -61,7 +83,11 @@ class WelcomeScreen extends StatelessWidget {
                         text: RichTextSpan(
                             one: "Don’t have an account ? ", two: "Sign up"),
                       ),
-                      onTap: () => GoRouter.of(context).go('/signup'),
+                      onTap: () {
+                        GoRouter.of(context).go('/create-account');
+                        BlocProvider.of<SignupBloc>(context)
+                            .add(SignupInitial());
+                      },
                     ),
                     //Text("data"),
                   ],

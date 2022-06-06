@@ -1,17 +1,15 @@
+import 'package:employee_management_system/presentation/routes/constants.dart';
 import 'package:go_router/go_router.dart';
 
 import '../auth_index.dart';
-import '../../../application/application_index.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../domain/domain_index.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
 
   final formKey = GlobalKey<FormState>();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-
+  final emailControle = TextEditingController();
+  final passwordControle = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -51,7 +49,7 @@ class LoginScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           CustomEmailField(
-                              controller: emailController,
+                              controller: emailControle,
                               labelText: "Email",
                               hintText: "Email",
                               validator: (String? email) {
@@ -65,7 +63,7 @@ class LoginScreen extends StatelessWidget {
                               }),
                           const SizedBox(height: 20),
                           CustomTextField(
-                            controller: passwordController,
+                            controller: passwordControle,
                             labelText: "Password",
                             hintText: "Password",
                             validator: (String? password) {
@@ -73,36 +71,51 @@ class LoginScreen extends StatelessWidget {
                                 return "Password must not be empty";
                               }
 
-                              final validPassword = password.length >= 8;
+                              final validPassword = password.length >= 6;
                               return validPassword
                                   ? null
                                   : "Password too short";
                             },
                           ),
                           const SizedBox(height: 20),
-                          BlocConsumer<AuthBloc, AuthState>(
-                            listenWhen: (previous, current) {
-                              return current is LoginSuccessful;
+                          BlocListener<AuthenticationBloc, AuthenticationState>(
+                            listener: (_, state) {
+                              if (state is AuthenticationFailure) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text('${state.message}'),
+                                ));
+                                GoRouter.of(context).go('/login');
+                              }
+                              if (state is AuthenticationAuthenticated) {
+                                if (state.user.role.toString() == "owner") {
+                                  GoRouter.of(context).go('/owner-dashboard');
+                                } else if (state.user.role.toString() ==
+                                    "employee") {
+                                  GoRouter.of(context)
+                                      .go('/employee-dashboard');
+                                } else {
+                                  GoRouter.of(context).go('/manager-dashboard');
+                                }
+                              }
+                              if (state is AuthenticationLoading) {
+                                GoRouter.of(context).go('/login');
+                              }
                             },
-                            listener: (_, AuthState state) {
-                              GoRouter.of(context).go('/welcome');
-                            },
-                            builder: (_, AuthState state) {
-                              return InkWell(
-                                child: SignUpContainer(st: "LogIn"),
-                                onTap: () {
-                                  final formValid =
-                                      formKey.currentState!.validate();
-                                  if (!formValid) return;
-                                  final authBloc =
-                                      BlocProvider.of<AuthBloc>(context);
-                                  authBloc.add(Login(
-                                    email: emailController.text,
-                                    password: passwordController.text,
-                                  ));
-                                },
-                              );
-                            },
+                            child: InkWell(
+                              child: SignUpContainer(st: "LogIn"),
+                              onTap: () {
+                                final formValid =
+                                    formKey.currentState!.validate();
+                                if (!formValid) return;
+                                (context).read<AuthenticationBloc>().add(
+                                      UserLogIn(
+                                        emailControle.text,
+                                        passwordControle.text,
+                                      ),
+                                    );
+                              },
+                            ),
                           )
                         ],
                       ),
@@ -116,7 +129,11 @@ class LoginScreen extends StatelessWidget {
                         text: RichTextSpan(
                             one: "Don’t have an account ? ", two: "Sign Up"),
                       ),
-                      onTap: () => GoRouter.of(context).go('/create-account'),
+                      onTap: () {
+                        GoRouter.of(context).go('/create-account');
+                        BlocProvider.of<SignupBloc>(context)
+                            .add(SignupInitial());
+                      },
                     ),
                     //Text("data"),
                   ],

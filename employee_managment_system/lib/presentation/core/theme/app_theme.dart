@@ -12,7 +12,7 @@ class AppTheme {
     bodyText2: GoogleFonts.roboto(
       fontSize: 14.0,
       fontWeight: FontWeight.w400,
-      color: Colors.deepOrangeAccent,
+      color: Colors.black,
     ),
     headline1: GoogleFonts.roboto(
       fontSize: 32.0,

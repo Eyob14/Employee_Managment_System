@@ -1,15 +1,19 @@
 import 'package:go_router/go_router.dart';
 
 import '../auth_index.dart';
-import '../../../application/application_index.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../domain/domain_index.dart';
 
 class SignupScreen extends StatelessWidget {
   SignupScreen({Key? key}) : super(key: key);
+
   final formKey = GlobalKey<FormState>();
+
   final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
+
+  final roleController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -79,40 +83,73 @@ class SignupScreen extends StatelessWidget {
                               },
                             ),
                             const SizedBox(height: 20),
-                            BlocConsumer<AuthBloc, AuthState>(
-                                listenWhen: (previous, current) {
-                              return current is SignupSuccessfull;
-                            }, listener: (_, AuthState state) {
-                              GoRouter.of(context).go('/login');
-                            }, builder: (_, AuthState state) {
-                              return InkWell(
+                            CustomEmailField(
+                              controller: roleController,
+                              labelText: "Role",
+                              hintText: "role",
+                              validator: (String? role) {
+                                if (role == null || role.isEmpty) {
+                                  return "role must not be empty!";
+                                }
+
+                                final correct =
+                                    (role == "employee" || role == "manager");
+
+                                return correct
+                                    ? null
+                                    : "role must be either employee or manager";
+                              },
+                            ),
+                            const SizedBox(height: 20),
+                            BlocListener<SignupBloc, SignupState>(
+                              listener: (_, SignupState state) {
+                                if (state is SignUpFailure) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    content: Text('${state.error}'),
+                                  ));
+                                }
+                                if (state is SignupSuccessfull) {
+                                  BlocProvider.of<AuthenticationBloc>(context)
+                                      .add(AppLoaded());
+                                  GoRouter.of(context).go('/login');
+                                }
+                              },
+                              child: InkWell(
                                 child: SignUpContainer(st: "Sign up"),
                                 onTap: () {
                                   final formValid =
                                       formKey.currentState!.validate();
                                   if (!formValid) return;
-                                  final authBloc =
-                                      BlocProvider.of<AuthBloc>(context);
-                                  authBloc.add(Signup(
-                                    email: emailController.text,
-                                    password: passwordController.text,
-                                  ));
+                                  (context).read<SignupBloc>().add(
+                                        SignUp(
+                                          user: User(
+                                            id: null,
+                                            email: emailController.text,
+                                            password: passwordController.text,
+                                            role: roleController.text,
+                                            approved: false,
+                                          ),
+                                        ),
+                                      );
                                 },
-                              );
-                            }),
+                              ),
+                            ),
                           ],
                         )),
-
                     const SizedBox(
                       height: 50,
                     ),
                     InkWell(
-                      child: RichText(
-                        text: RichTextSpan(
-                            one: "Already have an account ? ", two: "Login"),
-                      ),
-                      onTap: () => GoRouter.of(context).go('/login'),
-                    ),
+                        child: RichText(
+                          text: RichTextSpan(
+                              one: "Already have an account ? ", two: "Login"),
+                        ),
+                        onTap: () {
+                          BlocProvider.of<AuthenticationBloc>(context)
+                              .add(AppLoaded());
+                          GoRouter.of(context).go('/login');
+                        }),
                     //Text("data"),
                   ],
                 ),

@@ -14,7 +14,7 @@ class SelectCard extends StatelessWidget {
   Widget build(BuildContext context) {
     // final TextStyle textStyle = Theme.of(context).textTheme.display1;
     return Card(
-        color: Colors.orange,
+        color: Colors.white,
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
