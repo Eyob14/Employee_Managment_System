@@ -33,21 +33,6 @@ page they will fill out the basic information about themselves.
 **Authentication**:
 > At first Email and password through invitation link, next sign in using username and password.
  
-             
-**Group Members**
- 
-|      **Name**      |   **ID**   |**Section**|
-|  :--------------:  | :--------: | :------:  |
-|1. Bahailu Abera    |UGR/3464/12 |    3      |
-|  :--------------:  | :--------: | :------:  |
-|2. Eyob Zebene      |UGR/5067/12 |    2      |
-|  :--------------:  | :--------: | :------:  |
-|3. Gifti Mulugeta   |UGR/6377/12 |    1      |
-|  :--------------:  | :--------: | :------:  |
-|4. Roza Kassaa      |UGR/2571/12 |    1      |
-|  :--------------:  | :--------: | :------:  |
-|5. Selamawit Siferh |UGR/1822/12 |    1      |
- 
  
  
  
